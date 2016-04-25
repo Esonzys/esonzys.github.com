@@ -9,20 +9,20 @@
   <meta name="description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
 <meta property="og:type" content="article">
 <meta property="og:title" content="调整jfinal weixin架构的记录01">
-<meta property="og:url" content="http://yoursite.com/2016/04/23/adjust-jfinal-weixin-framwork/index.html">
+<meta property="og:url" content="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/index.html">
 <meta property="og:site_name" content="Esonzys's blog">
 <meta property="og:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
-<meta property="og:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx00.png">
-<meta property="og:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wxsdk.png">
-<meta property="og:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx000.png">
-<meta property="og:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx01.png">
-<meta property="og:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/ict01.png">
-<meta property="og:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-04-25T08:47:59.387Z">
+<meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wx00.png">
+<meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wxsdk.png">
+<meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wx000.png">
+<meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wx01.png">
+<meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
+<meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
+<meta property="og:updated_time" content="2016-04-25T14:07:11.445Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调整jfinal weixin架构的记录01">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
-<meta name="twitter:image" content="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx00.png">
+<meta name="twitter:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wx00.png">
   
     <link rel="alternative" href="/atom.xml" title="Esonzys&#39;s blog" type="application/atom+xml">
   
@@ -72,7 +72,7 @@
           <input name=tn type=hidden value="bds">
           <input name=cl type=hidden value="3">
           <input name=ct type=hidden value="2097152">
-          <input type="hidden" name="si" value="yoursite.com">
+          <input type="hidden" name="si" value="esonzys.github.io">
         </form>
       </div>
     </div>
@@ -118,7 +118,7 @@
 <li>本文主要讨论jfinal-weixin中的关于微信端交互的动作（菜单时间，文本消息等）的架构。在代码层面为继承MsgController的处理方法的讨论与重构。</li>
 </ul>
 <h2 id="3、jfinal-weixin-架构"><a href="#3、jfinal-weixin-架构" class="headerlink" title="3、jfinal-weixin 架构"></a>3、jfinal-weixin 架构</h2><hr>
-<h4 id="（1）jfinal-weixin-1-4-架构"><a href="#（1）jfinal-weixin-1-4-架构" class="headerlink" title="（1）jfinal-weixin 1.4 架构"></a>（1）jfinal-weixin 1.4 架构</h4><p>jfinal weixin由底层jfinal提供Controller、model、JFinalConfig、view（Jsp、FreeMark、Velocity）、AOP的支持，融合了对微信SDK（微信消息加解密、消息格式、API等）的支持。其中继承Controller的MsgController提供了微信消息的唯一入口index()方法(即在开发者中心输入的 URL 必须要指向此 action)。如下图所示为 jfinal-weixin 1.4 的架构图。<br><img src="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx00.png" alt="jfinal-weixin 1.4架构"><br>index()方法主要是接收消息，对消息进行解密，根据消息类型分发到相应的函数进行处理。</p>
+<h4 id="（1）jfinal-weixin-1-4-架构"><a href="#（1）jfinal-weixin-1-4-架构" class="headerlink" title="（1）jfinal-weixin 1.4 架构"></a>（1）jfinal-weixin 1.4 架构</h4><p>jfinal weixin由底层jfinal提供Controller、model、JFinalConfig、view（Jsp、FreeMark、Velocity）、AOP的支持，融合了对微信SDK（微信消息加解密、消息格式、API等）的支持。其中继承Controller的MsgController提供了微信消息的唯一入口index()方法(即在开发者中心输入的 URL 必须要指向此 action)。如下图所示为 jfinal-weixin 1.4 的架构图。<br><img src="/images/adjust-jfinal-weixin-framwork/wx00.png" alt="jfinal-weixin 1.4架构"><br>index()方法主要是接收消息，对消息进行解密，根据消息类型分发到相应的函数进行处理。</p>
 <ul>
 <li>1、消息解析getInMsg()；</li>
 <li>2、根据消息类型进行分发处理；</li>
@@ -138,7 +138,7 @@
 <h6 id="如何创建一个消息处理？"><a href="#如何创建一个消息处理？" class="headerlink" title="如何创建一个消息处理？"></a>如何创建一个消息处理？</h6><p>创建一个微信消息处理就需要创建一个继承 MsgController 消息处理类。创建的微信消息处理类通过覆写 MsgController中的processInTextMsg、processInMenuEvent 等方法来实现自定义的消息处理。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMsgController</span> <span class="keyword">extends</span> <span class="title">MsgController</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processInTextMsg</span><span class="params">(InTextMsg inTextMsg)</span> </span>&#123;</span><br><span class="line">        String msgContent = <span class="string">"欢迎使用智慧运维平台，请选择菜单来获取运维信息。欢迎您向我们反馈平台使用中存在的问题；感谢您对“互联网+运维”工作的大力支持！"</span>;</span><br><span class="line">        OutTextMsg outMsg = <span class="keyword">new</span> OutTextMsg(inTextMsg);</span><br><span class="line">        outMsg.setContent(msgContent);</span><br><span class="line">        render(outMsg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processInMenuEvent</span><span class="params">(InMenuEvent inMenuEvent)</span> </span>&#123;</span><br><span class="line">        String msgContent = <span class="string">"欢迎使用智慧运维平台，请选择菜单来获取运维信息。欢迎您向我们反馈平台使用中存在的问题；感谢您对“互联网+运维”工作的大力支持！"</span>;</span><br><span class="line">        OutTextMsg outMsg = <span class="keyword">new</span> OutTextMsg(inMenuEvent);</span><br><span class="line">        outMsg.setContent(msgContent);</span><br><span class="line">        render(outMsg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>Tips：这里需要注意回复文本的关键字、菜单EventKey必须唯一绑定在一个 TestMsgController 的方法上。</p>
 <h6 id="微信SDK的介绍"><a href="#微信SDK的介绍" class="headerlink" title="微信SDK的介绍"></a>微信SDK的介绍</h6><p>微信SDK中包括API接口、In(接收消息)、Out(输出消息)、InMsgParaser、OutMsgXmlBuilder主要的方法。详细的结构如下图所示(<strong>注：API接口属于微信提供调用功能，不属于实现的消息收发范畴，将在后面单独介绍。</strong>)：</p>
-<p><img src="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wxsdk.png" alt="jfinal-weixin SDK"></p>
+<p><img src="/images/adjust-jfinal-weixin-framwork/wxsdk.png" alt="jfinal-weixin SDK"></p>
 <ul>
 <li><p>In(接收消息)：对接收消息类型进行抽象，将 toUserName、fromUserName、createTime、msgType、agentId(存在于企业号中，为企业号的应用的id) 封装为 abstract InMsg 抽象类。继承 InMsg 的有Event事件、speech_recognition语音识别(在企业号中无此消息类型)、InTextMsg接收文本消息、InLocationMsg接收地理消息、InVoiceMsg接收语音消息、InVideoMsg接收视频消息、InImageMsg接收图片消息、InLinkMsg接收链接消息。<strong>点击Menu菜单事件为Event事件最主要处理的消息类型；在Menu菜单事件中“点击菜单跳转链接时的事件推送”（event = “view”）一般都进行忽略；在 MsgController 不进行任何处理。</strong> speech_recognition语音识别(在企业号中无此消息类型)主要与与 InVoiceMsg 唯一的不同是多了一个 Recognition 标记。</p>
 </li>
@@ -153,7 +153,7 @@
 <p>微信公众平台、企业号平台向开发者开放了功能调用的API接口。公众开发平台先于企业号开发平台推出，企业号平台目前提供的API接口不如公众平台丰富，但随着企业号平台的不断完善，相应的API接口也会在后续不断进行开放。</p>
 <p>jfinal-weixin 提供了API调用的类方法，通过 HttpKit.get、HttpKit.post 来进行接口的调用。主要的API接口有：获取access_token、查询创建菜单、用户管理等。下面代码示例为企业号的获取access_token。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AccessTokenApi</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String url = <span class="string">"https://qyapi.weixin.qq.com/cgi-bin/gettoken"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> AccessToken accessToken;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> AccessToken <span class="title">getAccessToken</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (accessToken != <span class="keyword">null</span> &amp;&amp; accessToken.isAvailable())</span><br><span class="line">            <span class="keyword">return</span> accessToken;	</span><br><span class="line">        refreshAccessToken();</span><br><span class="line">        <span class="keyword">return</span> accessToken;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">refreshAccessToken</span><span class="params">()</span> </span>&#123; <span class="comment">//刷新重新获取access_token</span></span><br><span class="line">        accessToken = requestAccessToken();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* synchronized关键字保证每次只有一个线程可以调用获取access_token */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> AccessToken <span class="title">requestAccessToken</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        AccessToken result = <span class="keyword">null</span>;</span><br><span class="line">        ApiConfig ac = ApiConfigKit.getApiConfig();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">3</span>; i++) &#123;</span><br><span class="line">            String corpId = ac.getCorpId();</span><br><span class="line">            String corpSecret = ac.getCorpSecret();</span><br><span class="line">            Map&lt;String, String&gt; queryParas = ParaMap.create(<span class="string">"corpid"</span>, corpId).put(<span class="string">"corpsecret"</span>, corpSecret).getData();</span><br><span class="line">            String json = HttpKit.get(url, queryParas);</span><br><span class="line">            result = <span class="keyword">new</span> AccessToken(json);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (result.isAvailable())</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p><strong>关于微信SDK的参考资料：</strong><br>微信公众号开发者文档：<a href="http://mp.weixin.qq.com/wiki/home/" target="_blank" rel="external">http://mp.weixin.qq.com/wiki/home/</a><br>微信企业号开发者文档：<a href="http://qydev.weixin.qq.com/wiki/index.php?title=%E9%A6%96%E9%A1%B5" target="_blank" rel="external">http://qydev.weixin.qq.com/wiki/index.php?title=%E9%A6%96%E9%A1%B5</a></p>
-<h4 id="（2）jfinal-weixin-1-6-架构"><a href="#（2）jfinal-weixin-1-6-架构" class="headerlink" title="（2）jfinal-weixin 1.6 架构"></a>（2）jfinal-weixin 1.6 架构</h4><p>jfinal-weixin 1.6 版本基于jfinal 2.2 版本，对于<a href="http://www.jfinal.com/" target="_blank" rel="external">final框架的升级升级</a>，本文不做讨论，有兴趣可以参考 <a href="http://www.jfinal.com/" target="_blank" rel="external">jfinal 2.2</a> 的手册来学习查看。<br>jfinal-weixin 1.6 架构如下图所示。<br><img src="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx000.png" alt="jfinal-weixin 1.6架构"><br>jfinal-weixin 1.6 版本主要的修改的地方有3个：</p>
+<h4 id="（2）jfinal-weixin-1-6-架构"><a href="#（2）jfinal-weixin-1-6-架构" class="headerlink" title="（2）jfinal-weixin 1.6 架构"></a>（2）jfinal-weixin 1.6 架构</h4><p>jfinal-weixin 1.6 版本基于jfinal 2.2 版本，对于<a href="http://www.jfinal.com/" target="_blank" rel="external">final框架的升级升级</a>，本文不做讨论，有兴趣可以参考 <a href="http://www.jfinal.com/" target="_blank" rel="external">jfinal 2.2</a> 的手册来学习查看。<br>jfinal-weixin 1.6 架构如下图所示。<br><img src="/images/adjust-jfinal-weixin-framwork/wx000.png" alt="jfinal-weixin 1.6架构"><br>jfinal-weixin 1.6 版本主要的修改的地方有3个：</p>
 <ul>
 <li><p>1、增加了 MsgControllerAdapter 抽象类；<br>MsgControllerAdapter 对 MsgController 部分方法提供了默认实现，以便开发者不去关注 MsgController 中不需要处理的抽象方法，节省代码量。微信消息处理函数(指架构图中的子Controller，准确的说是子MsgController)需要继承MsgControllerAdapter来获得消息处理的入口。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgControllerAdapter</span> <span class="keyword">extends</span> <span class="title">MsgController</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">processInTextMsg</span><span class="params">(InTextMsg inTextMsg)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">processInMenuEvent</span><span class="params">(InMenuEvent inMenuEvent)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processInLocationMsg</span><span class="params">(InLocationMsg inLocationMsg)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//这里提供默认的实现方法</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ..............省略其他消息类型的处理的方法................</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -165,19 +165,19 @@
 </li>
 </ul>
 <h2 id="4、jfinal-weixin-修改0-1版"><a href="#4、jfinal-weixin-修改0-1版" class="headerlink" title="4、jfinal-weixin 修改0.1版"></a>4、jfinal-weixin 修改0.1版</h2><hr>
-<p><img src="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/wx01.png" alt="jfinal-weixin 1.4修改0.1版架构"></p>
+<p><img src="/images/adjust-jfinal-weixin-framwork/wx01.png" alt="jfinal-weixin 1.4修改0.1版架构"></p>
 <h2 id="5、itc-weixin-1-0-升级说明"><a href="#5、itc-weixin-1-0-升级说明" class="headerlink" title="5、itc-weixin 1.0 升级说明"></a>5、itc-weixin 1.0 升级说明</h2><hr>
 <p>itc-weixin 1.0 方法1：</p>
-<p><img src="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/ict01.png" alt="itc-weixin 1.0版本：修改方法1架构"></p>
+<p><img src="/images/adjust-jfinal-weixin-framwork/ict01.png" alt="itc-weixin 1.0版本：修改方法1架构"></p>
 <p>itc-weixin 1.0 方法2：</p>
-<p><img src="http://esonzys.github.io/img/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：修改方法2架构"></p>
+<p><img src="/images/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：修改方法2架构"></p>
 <p>github的下载地址：itc-weixin 项目 github 的 pull 地址: <a href="https://github.com/airman33/itc-weixin.git" target="_blank" rel="external">https://github.com/airman33/itc-weixin.git</a></p>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://yoursite.com/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cing21s0z00002snazuqnx2fv" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录01">分享到</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cing3ha7k0000x4nanb1mrkgy" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录01">分享到</a>
       
 
       
@@ -237,7 +237,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
