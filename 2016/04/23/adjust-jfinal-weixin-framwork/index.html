@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wx01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-04-25T15:01:38.827Z">
+<meta property="og:updated_time" content="2016-04-26T05:53:59.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调整jfinal weixin架构的记录01">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
@@ -118,7 +118,8 @@
 <li>本文主要讨论jfinal-weixin中的关于微信端交互的动作（菜单时间，文本消息等）的架构。在代码层面为继承MsgController的处理方法的讨论与重构。</li>
 </ul>
 <h2 id="3、jfinal-weixin-架构"><a href="#3、jfinal-weixin-架构" class="headerlink" title="3、jfinal-weixin 架构"></a>3、jfinal-weixin 架构</h2><hr>
-<h4 id="（1）jfinal-weixin-1-4-架构"><a href="#（1）jfinal-weixin-1-4-架构" class="headerlink" title="（1）jfinal-weixin 1.4 架构"></a>（1）jfinal-weixin 1.4 架构</h4><p>jfinal weixin由底层jfinal提供Controller、model、JFinalConfig、view（Jsp、FreeMark、Velocity）、AOP的支持，融合了对微信SDK（微信消息加解密、消息格式、API等）的支持。其中继承Controller的MsgController提供了微信消息的唯一入口index()方法(即在开发者中心输入的 URL 必须要指向此 action)。如下图所示为 jfinal-weixin 1.4 的架构图。<br><img src="/images/adjust-jfinal-weixin-framwork/wx00.png" alt="jfinal-weixin 1.4架构"><br>index()方法主要是接收消息，对消息进行解密，根据消息类型分发到相应的函数进行处理。</p>
+<p>jfinal weixin 由底层 jfinal 提供 Controller、model、JFinalConfig、view（Jsp、FreeMark、Velocity）、AOP 的支持，融合了对微信SDK（微信消息加解密、消息格式、API等）的支持。其中继承Controller的MsgController提供了微信消息的唯一入口index()方法(即在开发者中心输入的 URL 必须要指向此 action)。</p>
+<h4 id="（1）jfinal-weixin-1-4-架构"><a href="#（1）jfinal-weixin-1-4-架构" class="headerlink" title="（1）jfinal-weixin 1.4 架构"></a>（1）jfinal-weixin 1.4 架构</h4><p>如下图所示为 jfinal-weixin 1.4 的架构图。<br><img src="/images/adjust-jfinal-weixin-framwork/wx00.png" alt="jfinal-weixin 1.4架构"><br>index()方法主要是接收消息，对消息进行解密，根据消息类型分发到相应的函数进行处理。</p>
 <ul>
 <li>1、消息解析getInMsg()；</li>
 <li>2、根据消息类型进行分发处理；</li>
@@ -161,7 +162,7 @@
 <li><p>2、随着微信API接口的开发，丰富了微信SDK部分的内容，增加了消息类型和API接口；<br>对接收消息In中的event事件消息进行了再次抽象，将event类型字段单独抽出来一个继承InMsg的EventInMsg抽象类。其他的所有的event事件消息实体类都继承该抽象类。同时也新增了一些新event事件的实体类，这里不再一一列出。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">EventInMsg</span> <span class="keyword">extends</span> <span class="title">InMsg</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> String event;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EventInMsg</span><span class="params">(String toUserName, String fromUserName, Integer createTime, String msgType, String event)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(toUserName, fromUserName, createTime, msgType);</span><br><span class="line">        <span class="keyword">this</span>.event = event;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getEvent</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> event;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEvent</span><span class="params">(String event)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.event = event;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>3、新增了utils工具包，提供了Base64、Http请求、异常重试等工具。<br>utils为jfinal-weixin 1.6 引入的工具包帮助类。在utils中主要有异常重试RetryUtils类、IOUtils类、Json转换JsonUtils、类工具ClassUtils、Http请求HttpUtils、HttpKitExt添加功能。对于这些工具的详细内容，可以查看源码进行学习。下面为代码HttpUtils工具类，使用 delegate 代理。</p>
+<li><p>3、新增了utils工具包，提供了Base64、Http请求、异常重试等工具。<br>utils为jfinal-weixin 1.6 引入的工具包帮助类。在utils中主要有异常重试RetryUtils类、IOUtils类、Json转换JsonUtils、类工具ClassUtils、Http请求HttpUtils、HttpKitExt添加功能。对于这些工具的详细内容，可以查看源码进行学习。下面为HttpUtils工具类部分代码，使用 delegate 代理。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">// http请求工具代理对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> HttpDelegate delegate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        HttpDelegate delegateToUse = <span class="keyword">null</span>;</span><br><span class="line">        <span class="comment">// okhttp3.OkHttpClient?</span></span><br><span class="line">        <span class="keyword">if</span> (ClassUtils.isPresent(<span class="string">"okhttp3.OkHttpClient"</span>, HttpUtils.class.getClassLoader())) &#123;</span><br><span class="line">            delegateToUse = <span class="keyword">new</span> OkHttp3Delegate();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// com.squareup.okhttp.OkHttpClient?</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (ClassUtils.isPresent(<span class="string">"com.squareup.okhttp.OkHttpClient"</span>, HttpUtils.class.getClassLoader())) &#123;</span><br><span class="line">            delegateToUse = <span class="keyword">new</span> OkHttpDelegate();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// com.jfinal.kit.HttpKit</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (ClassUtils.isPresent(<span class="string">"com.jfinal.kit.HttpKit"</span>, HttpUtils.class.getClassLoader())) &#123;</span><br><span class="line">            delegateToUse = <span class="keyword">new</span> HttpKitDelegate();</span><br><span class="line">        &#125;</span><br><span class="line">        delegate = delegateToUse;</span><br><span class="line">    &#125;</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
@@ -178,7 +179,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cing4ug9b000028naubav1arl" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录01">分享到</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cinh0pmdn0000y8nap9h5r421" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录01">Share</a>
       
 
       
@@ -194,7 +195,7 @@
   
   
     <a href="/2016/03/12/svn/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">redhat 6.5 安装配置svn服务器</div>
     </a>
   
@@ -209,7 +210,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">分类</h3>
+    <h3 class="widget-title">Categories</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/jfinal/">jfinal</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/配置/">配置</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -218,7 +219,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">标签</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/jfinal/">jfinal</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redhat/">redhat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -227,7 +228,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">标签云</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
       <a href="/tags/jfinal/" style="font-size: 10px;">jfinal</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/redhat/" style="font-size: 10px;">redhat</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a>
     </div>
@@ -236,7 +237,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -245,7 +246,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">近期文章</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -264,7 +265,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">友情链接</h3>
+    <h3 class="widget-title">Links</h3>
     <div class="widget">
       <ul>
         
@@ -301,7 +302,7 @@
 </nav>
   <!-- totop start -->
 <div id="totop">
-<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+<a title="totop"><img src="/img/scrollup.png"/></a>
 </div>
 
 <!-- totop end -->
