@@ -4,11 +4,11 @@
 <head>
   <meta charset="utf-8">
   
-  <title>调整jfinal weixin架构的记录01 | Esonzys&#39;s blog</title>
+  <title>调整jfinal weixin架构的记录 | Esonzys&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
 <meta property="og:type" content="article">
-<meta property="og:title" content="调整jfinal weixin架构的记录01">
+<meta property="og:title" content="调整jfinal weixin架构的记录">
 <meta property="og:url" content="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/index.html">
 <meta property="og:site_name" content="Esonzys's blog">
 <meta property="og:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
@@ -19,9 +19,9 @@
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wxmbc.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-04-27T06:10:11.679Z">
+<meta property="og:updated_time" content="2016-04-27T06:28:34.484Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="调整jfinal weixin架构的记录01">
+<meta name="twitter:title" content="调整jfinal weixin架构的记录">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
 <meta name="twitter:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wx00.png">
   
@@ -98,7 +98,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      调整jfinal weixin架构的记录01
+      调整jfinal weixin架构的记录
     </h1>
   
 
@@ -182,8 +182,8 @@
 <li><p>(2) 在 ChildMsgController 的构造函数中对成员变量 MsgBaseController 的对象baseController 赋值操作。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ChildMsgController</span><span class="params">(MsgController baseController)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.baseController = baseController;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>(3) 在 MsgBaseController 中做分发处理的时，根据从 Menu.xml 的映射关系获得到处理函数的ClassName；通过ClassName利用反射创建构造函数，生成实例对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 通过反射来获取代参数的controller */</span></span><br><span class="line">Class&lt;?&gt; ctrlClass = Class.forName(controllerClass);</span><br><span class="line">Constructor&lt;?&gt; constructor = ctrlClass.getConstructor(MsgController.class);</span><br><span class="line">classObject = (MsgController) constructor.newInstance(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+<li><p>(3) 在 MsgBaseController 中做分发处理的时，从 Menu.xml 的映射关系获得到处理函数的ClassName；通过ClassName利用反射创建构造函数，生成实例对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 通过反射来获取Menu.xml中ChildMenu标签下class标签下类名的实例 */</span></span><br><span class="line"><span class="comment">/* controllerClass为String类型的类名，例如com.nfjd.bocp.controller.AlarmMsgController */</span></span><br><span class="line">Class&lt;?&gt; ctrlClass = Class.forName(controllerClass); </span><br><span class="line">Constructor&lt;?&gt; constructor = ctrlClass.getConstructor(MsgController.class);</span><br><span class="line">classObject = (MsgController) constructor.newInstance(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <p>MsgBaseController 的代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgBaseController</span> <span class="keyword">extends</span> <span class="title">MsgController</span></span><br><span class="line"></span>&#123;    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processInTextMsg</span><span class="params">(InTextMsg inTextMsg)</span></span><br><span class="line">    </span>&#123;       </span><br><span class="line">        String msgContent = <span class="string">"欢迎使用智慧运维平台，请选择菜单来获取运维信息。欢迎您向我们反馈平台使用中存在的问题；感谢您对“互联网+运维”工作的大力支持！"</span>;</span><br><span class="line">        </span><br><span class="line">            OutTextMsg outMsg = <span class="keyword">new</span> OutTextMsg(inTextMsg);</span><br><span class="line">            outMsg.setContent(msgContent);</span><br><span class="line">            render(outMsg);     </span><br><span class="line">    &#125;      </span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processInQrCodeEvent</span><span class="params">(InQrCodeEvent inQrCodeEvent)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processInLocationEvent</span><span class="params">(InLocationEvent inLocationEvent)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">    &#125;        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -198,7 +198,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cinigpwpb00008kna3c65rsgv" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录01">分享到</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cinihdk8h0000r8na1l0ubwcl" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
       
 
       
@@ -214,7 +214,7 @@
   
   
     <a href="/2016/03/12/svn/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">redhat 6.5 安装配置svn服务器</div>
     </a>
   
@@ -229,7 +229,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">分类</h3>
+    <h3 class="widget-title">Categories</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/jfinal/">jfinal</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/配置/">配置</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -238,7 +238,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">标签</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/jfinal/">jfinal</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redhat/">redhat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -247,7 +247,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">标签云</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
       <a href="/tags/jfinal/" style="font-size: 10px;">jfinal</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/redhat/" style="font-size: 10px;">redhat</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a>
     </div>
@@ -256,7 +256,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -265,12 +265,12 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">近期文章</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2016/04/23/adjust-jfinal-weixin-framwork/">调整jfinal weixin架构的记录01</a>
+            <a href="/2016/04/23/adjust-jfinal-weixin-framwork/">调整jfinal weixin架构的记录</a>
           </li>
         
           <li>
@@ -284,7 +284,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">友情链接</h3>
+    <h3 class="widget-title">Links</h3>
     <div class="widget">
       <ul>
         
@@ -321,7 +321,7 @@
 </nav>
   <!-- totop start -->
 <div id="totop">
-<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+<a title="totop"><img src="/img/scrollup.png"/></a>
 </div>
 
 <!-- totop end -->
