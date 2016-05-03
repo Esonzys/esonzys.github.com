@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wxmbc.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-05-03T06:45:51.643Z">
+<meta property="og:updated_time" content="2016-05-03T08:10:20.947Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调整jfinal weixin架构的记录">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
@@ -189,7 +189,8 @@
 <p>在processInMenuEvent事件的中会进行一个render(outMsg)的操作将消息返回给微信服务器。在这个地方忽略了响应请求Response必须知道响应消息要发给谁，简单的说要先知道谁发过来的请求。render()就是一个Response消息的操作，在ChildMsgController中并不知道是谁发过来的请求，我要回复消息给谁。执行render操作也并没有像希望的那样发送消息给微信服务器。<br>MsgBaseController 作为消息接收的入口，通过getRequest接收到请求消息，知道了谁发过来的消息。在MsgBaseController中响应请求Response就可以知道我要消息发给谁。<br>解决这个问题方法就是在MsgBaseController中进行render()。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.render(classObject.getRender()); <span class="comment">//this 指代 MsgBaseController的对象baseController。</span></span><br></pre></td></tr></table></figure></p>
 <p>小结：以上的修改有不完美的地方。频繁的读取xml文件带来IO性能瓶颈；使用全局静态变量保存接收到的消息inMsg；记录用户点击菜单的记录存储在数据库中；需要进行二次的render；index()方法有200多行代码；这些都是可以优化的地方。</p>
 <h2 id="5、itc-weixin-1-0-升级说明"><a href="#5、itc-weixin-1-0-升级说明" class="headerlink" title="5、itc-weixin 1.0 升级说明"></a>5、itc-weixin 1.0 升级说明</h2><hr>
-<p>对jfinal-weixin 1.2 修改0.1版基础上进行应用开发经验总结，以及对jfinal平台有了更深入清晰的了解，结合存在不足，进行了第二次的架构的升级<br>itc-weixin 1.0 方法1：</p>
+<p>对jfinal-weixin 1.2 修改0.1版基础上进行应用开发经验总结，以及对jfinal平台有了更深入清晰的了解，结合存在不足，进行了第二次的架构的优化工作。<br>主要思路：唯一入口处理；不再对MsgController进行继承，把MsgController作为入口，将消息的分发处理进行剥离操作。</p>
+<p>itc-weixin 1.0 方法1：</p>
 <p><img src="/images/adjust-jfinal-weixin-framwork/ict01.png" alt="itc-weixin 1.0版本：修改方法1架构"></p>
 <p>itc-weixin 1.0 方法2：</p>
 <p><img src="/images/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：修改方法2架构"></p>
@@ -199,7 +200,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cinr50fvq0000gwnar2u8zntr" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">分享到</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cinr5npdr0000xgnaho3c6wrr" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
       
 
       
@@ -215,7 +216,7 @@
   
   
     <a href="/2016/03/12/svn/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">redhat 6.5 安装配置svn服务器</div>
     </a>
   
@@ -230,7 +231,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">分类</h3>
+    <h3 class="widget-title">Categories</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/jfinal/">jfinal</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/配置/">配置</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -239,7 +240,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">标签</h3>
+    <h3 class="widget-title">Tags</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/jfinal/">jfinal</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redhat/">redhat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -248,7 +249,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">标签云</h3>
+    <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
       <a href="/tags/jfinal/" style="font-size: 10px;">jfinal</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/redhat/" style="font-size: 10px;">redhat</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a>
     </div>
@@ -257,7 +258,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
+    <h3 class="widget-title">Archives</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -266,7 +267,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">近期文章</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -285,7 +286,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">友情链接</h3>
+    <h3 class="widget-title">Links</h3>
     <div class="widget">
       <ul>
         
@@ -322,7 +323,7 @@
 </nav>
   <!-- totop start -->
 <div id="totop">
-<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+<a title="totop"><img src="/img/scrollup.png"/></a>
 </div>
 
 <!-- totop end -->
