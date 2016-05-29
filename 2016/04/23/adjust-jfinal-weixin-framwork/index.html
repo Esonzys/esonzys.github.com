@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wxmbc.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-05-29T07:12:56.198Z">
+<meta property="og:updated_time" content="2016-05-29T07:50:18.173Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调整jfinal weixin架构的记录">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
@@ -193,10 +193,15 @@
 <p>itc-weixin 1.0 修改的基本思路介绍：<br><img src="/images/adjust-jfinal-weixin-framwork/ict01.png" alt="itc-weixin 1.0版本：修改基本思路"><br>萌生这样的修改思路，来源于最初的0.1版本痛苦的修改经历以及从代码的逻辑清晰角度出发总结出来的经验。</p>
 <ul>
 <li>首先，在0.1版本中MsgBaseController为微信消息交互的入口，处理子Controller的业务逻辑需要从MsgController中跳转或分发处理到子Controller中，子Controller处理完的消息又需要回到MsgBaseController中进行render(呈现)操作。</li>
-<li>在进行0.1版本修改过程中，遇到在子Controller中进行render后，并没有得到要呈现的内容或回复的消息；经过调试发现，在子Controller里进行render后，程序回重新回到MsgBaseController中再进行一次render，因此需要将子Controller的render传递到MsgBaseController中。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.render(classObject.getRender());<span class="comment">// classObject代表子Controller的对象</span></span><br></pre></td></tr></table></figure>
+<li><p>在进行0.1版本修改过程中，遇到在子Controller中进行render后，并没有得到要呈现的内容或回复的消息；经过调试发现，在子Controller里进行render后，程序回重新回到MsgBaseController中再进行一次render，因此需要将子Controller的render传递到MsgBaseController中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// classObject代表子Controller的对象</span></span><br><span class="line"><span class="keyword">this</span>.render(classObject.getRender());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其次，多次的代码间的跳转不利于代码的维护、增加了理解程序的难度。秉承简单清晰化的代码逻辑，减少业务开发者的难度。在1.0版本中将render操作唯一化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">	 * weixin 公众号服务器调用唯一入口，即在开发者中心输入的 URL 必须要指向此 action</span><br><span class="line">	 * </span><br><span class="line">	 * <span class="doctag">@author</span> esonzys modify_date 2016年4月13日</span><br><span class="line">	 */</span></span><br><span class="line">	<span class="meta">@Before</span>(MsgInterceptor.class)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">index</span><span class="params">()</span></span><br><span class="line">	</span>&#123;</span><br><span class="line">		InMsg msg = <span class="keyword">null</span>;</span><br><span class="line">		String inMsgXml = <span class="keyword">null</span>;</span><br><span class="line">		</span><br><span class="line">		MsgProcess processClass = <span class="keyword">null</span>;</span><br><span class="line">		inMsgXml = ProcessMsg.getInMsgXml(inMsgXml, <span class="keyword">this</span>);</span><br><span class="line">		<span class="keyword">if</span> (ApiConfigKit.isDevMode())</span><br><span class="line">		&#123;</span><br><span class="line">			System.out.println(<span class="string">"接收消息:"</span>);</span><br><span class="line">			System.out.println(inMsgXml);</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		msg = ProcessMsg.getInMsg(msg, inMsgXml);<span class="comment">// 对消息进行解析</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (msg == <span class="keyword">null</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			log.info(<span class="string">"msg为空！"</span>);</span><br><span class="line">			renderNull();</span><br><span class="line">		&#125; <span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">// 判断是否为view类型的event事件</span></span><br><span class="line">			String msgType = msg.getMsgType();</span><br><span class="line">			String eventKey = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">			<span class="comment">/**</span><br><span class="line">			 * Event | text 分别处理</span><br><span class="line">			 */</span></span><br><span class="line">			<span class="keyword">if</span> (msgType.equalsIgnoreCase(<span class="string">"event"</span>))</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> (!isViewEvnet(msg))</span><br><span class="line">				&#123;</span><br><span class="line">					eventKey = getEventKey(msg);</span><br><span class="line">					<span class="comment">/**</span><br><span class="line">					 * 处理不属于view类型（点击菜单跳转）类型的event</span><br><span class="line">					 */</span>					</span><br><span class="line">					<span class="keyword">try</span>&#123;</span><br><span class="line">						processClass = EventKeyMapping.M_EVENT_KEY_MAPPING</span><br><span class="line">								.getEventKeyClass(eventKey).newInstance();</span><br><span class="line">					&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">						<span class="comment">//这里需要输出与newInstance相关的错误</span></span><br><span class="line">						e.printStackTrace();</span><br><span class="line">					&#125;					</span><br><span class="line">					</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (msgType.equalsIgnoreCase(<span class="string">"text"</span>))</span><br><span class="line">			&#123;				</span><br><span class="line">				<span class="keyword">try</span></span><br><span class="line">				&#123;</span><br><span class="line">					processClass = MsgBaseProcess.class.newInstance();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (InstantiationException e)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (IllegalAccessException e)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">/* &#125; */</span></span><br><span class="line">			&#125;</span><br><span class="line">			log.info(<span class="string">"处理函数（Process Class）的方法为："</span></span><br><span class="line">					+ processClass.getClass().getName());</span><br><span class="line"></span><br><span class="line">			<span class="comment">/**</span><br><span class="line">			 * 获取输出的消息</span><br><span class="line">			 */</span></span><br><span class="line">			<span class="keyword">if</span> (!processClass.equals(<span class="string">"NotExsit"</span>))</span><br><span class="line">			&#123;</span><br><span class="line">				OutMsg outMsg = getOutMsg(processClass.getClass().getName(), msg, inMsgXml);</span><br><span class="line">				log.info(<span class="string">"进行render！"</span>);</span><br><span class="line">				render(outMsg);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (isViewEvnet(msg))</span><br><span class="line">			&#123;</span><br><span class="line">				log.info(<span class="string">"跳转链接，无须处理。"</span>);</span><br><span class="line">				renderNull();</span><br><span class="line">			&#125; <span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				renderOutTextMsg(<span class="string">"请检查输入的菜单键是否正确！！！"</span>, msg);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>itc-weixin 1.0 实现方法：</p>
+<p>由上面的代码可以清楚的看到：（1）EventKeyMapping 来获取eventKey对应的processClass；（2）getOutMsg(String, InMsg, String)函数来获取processClass处理返回来的outMsg。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据eventKey获取相应的业务逻辑的一个实例</span></span><br><span class="line">processClass = EventKeyMapping.M_EVENT_KEY_MAPPING.getEventKeyClass(eventKey).newInstance();</span><br><span class="line"></span><br><span class="line"><span class="comment">// getOutMsg(String, InMsg, String)函数来获取processClass处理返回来的outMsg。</span></span><br><span class="line">OutMsg outMsg = getOutMsg(processClass.getClass().getName(), msg, inMsgXml);</span><br><span class="line">render(outMsg);</span><br></pre></td></tr></table></figure></p>
+<p>总结：<br>itc-weixin 1.0 实现方法：</p>
 <p><img src="/images/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：架构"></p>
 <p>github的下载地址：itc-weixin 项目 github 的 pull 地址: <a href="https://github.com/airman33/itc-weixin.git" target="_blank" rel="external">https://github.com/airman33/itc-weixin.git</a></p>
 
@@ -204,7 +209,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cios93gzv00005onaycpq8ui7" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="ciosady1f0000iknaa8wg7mw8" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">分享到</a>
       
 
       
@@ -220,7 +225,7 @@
   
   
     <a href="/2016/03/12/svn/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">redhat 6.5 安装配置svn服务器</div>
     </a>
   
@@ -235,7 +240,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/jfinal/">jfinal</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/配置/">配置</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -244,7 +249,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">标签</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/jfinal/">jfinal</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redhat/">redhat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -253,7 +258,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
       <a href="/tags/jfinal/" style="font-size: 10px;">jfinal</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/redhat/" style="font-size: 10px;">redhat</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a>
     </div>
@@ -262,7 +267,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -271,7 +276,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">近期文章</h3>
     <div class="widget">
       <ul>
         
@@ -290,7 +295,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Links</h3>
+    <h3 class="widget-title">友情链接</h3>
     <div class="widget">
       <ul>
         
@@ -327,7 +332,7 @@
 </nav>
   <!-- totop start -->
 <div id="totop">
-<a title="totop"><img src="/img/scrollup.png"/></a>
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 </div>
 
 <!-- totop end -->
