@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/wxmbc.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-05-03T09:00:23.297Z">
+<meta property="og:updated_time" content="2016-05-29T02:25:56.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调整jfinal weixin架构的记录">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
@@ -190,8 +190,8 @@
 <p>小结：以上的修改有不完美的地方。频繁的读取xml文件带来IO性能瓶颈；使用全局静态变量保存接收到的消息inMsg；记录用户点击菜单的记录存储在数据库中；需要进行二次的render；index()方法有200多行代码；这些都是可以优化的地方。</p>
 <h2 id="5、itc-weixin-1-0-升级说明"><a href="#5、itc-weixin-1-0-升级说明" class="headerlink" title="5、itc-weixin 1.0 升级说明"></a>5、itc-weixin 1.0 升级说明</h2><hr>
 <p>对jfinal-weixin 1.2 修改0.1版基础上进行应用开发经验总结，以及对jfinal平台有了更深入清晰的了解，结合存在不足，进行了第二次的架构的优化工作。<br>主要思路：唯一入口处理；不再对MsgController进行继承，把MsgController作为入口，将消息MsgProcess的分发处理进行剥离操作，返回OutMsg给MsgController。这样开发者只需要关注处理返回OutMsg。</p>
-<p>itc-weixin 1.0 方法1：<br><img src="/images/adjust-jfinal-weixin-framwork/ict01.png" alt="itc-weixin 1.0版本：修改方法1架构"></p>
-<p>itc-weixin 1.0 方法2：</p>
+<p>itc-weixin 1.0 修改的基本思路介绍：<br><img src="/images/adjust-jfinal-weixin-framwork/ict01.png" alt="itc-weixin 1.0版本：修改方法1架构"></p>
+<p>itc-weixin 1.0 实现方法：</p>
 <p><img src="/images/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：修改方法2架构"></p>
 <p>github的下载地址：itc-weixin 项目 github 的 pull 地址: <a href="https://github.com/airman33/itc-weixin.git" target="_blank" rel="external">https://github.com/airman33/itc-weixin.git</a></p>
 
@@ -199,7 +199,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="cioryru4k0001fona1togqp6n" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="ciorysuxe0000uknaitj6rvqt" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
       
 
       
