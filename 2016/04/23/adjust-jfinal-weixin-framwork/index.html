@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict01.png">
 <meta property="og:image" content="http://esonzys.github.io/images/adjust-jfinal-weixin-framwork/ict02.png">
 <meta property="og:image" content="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/ict02.png">
-<meta property="og:updated_time" content="2016-05-29T15:25:46.430Z">
+<meta property="og:updated_time" content="2016-05-29T15:26:09.662Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="调整jfinal weixin架构的记录">
 <meta name="twitter:description" content="JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml">
@@ -202,14 +202,15 @@
 </li>
 </ul>
 <p>由上面的代码可以清楚的看到：（1）EventKeyMapping 来获取eventKey对应的processClass；（2）getOutMsg(String, InMsg, String)函数来获取processClass处理返回来的outMsg。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据eventKey获取相应的业务逻辑的一个实例</span></span><br><span class="line">processClass = EventKeyMapping.M_EVENT_KEY_MAPPING.getEventKeyClass(eventKey).newInstance();</span><br><span class="line"></span><br><span class="line"><span class="comment">// getOutMsg(String, InMsg, String)函数来获取processClass处理返回来的outMsg。</span></span><br><span class="line">OutMsg outMsg = getOutMsg(processClass.getClass().getName(), msg, inMsgXml);</span><br><span class="line">render(outMsg);</span><br></pre></td></tr></table></figure></p>
-<p>总结：按照设定的修改思路，对程序进行一步简单的重构，将冗长的代码进行剥离。在正式的发布版本中使用将子Controller业务处理部门抽象为一个Service层来进行处理。<br>itc-weixin 1.0 实现方法：<br>上面已经讲了，在1.0版本中引入Service层来进行一个业务逻辑处理。在Service层实现过程中引入 <a href="http://www.cnblogs.com/java-my-life/archive/2012/04/13/2442795.html" target="_blank" rel="external">缺省适配器模式</a> 以及jfinal 2.0版本中的新增的 <em>业务层拦截器</em> 。<br>//<img src="/images/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：架构"><br>总体架构如上图所示，下面将单独把Service层的单独拿出来进行说明。<br><img src="/2016/04/23/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：架构" title="itc-weixin 1.0版本：架构"></p>
+<p>总结：按照设定的修改思路，对程序进行一步简单的重构，将冗长的代码进行剥离。在正式的发布版本中使用将子Controller业务处理部门抽象为一个Service层来进行处理。<br>itc-weixin 1.0 实现方法：<br>上面已经讲了，在1.0版本中引入Service层来进行一个业务逻辑处理。在Service层实现过程中引入 <a href="http://www.cnblogs.com/java-my-life/archive/2012/04/13/2442795.html" target="_blank" rel="external">缺省适配器模式</a> 以及jfinal 2.0版本中的新增的 <em>业务层拦截器</em> 。</p>
+<h1 id=""><a href="#" class="headerlink" title=""></a><img src="/images/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：架构"></h1><p>总体架构如上图所示，下面将单独把Service层的单独拿出来进行说明。<br><img src="/2016/04/23/adjust-jfinal-weixin-framwork/ict02.png" alt="itc-weixin 1.0版本：架构" title="itc-weixin 1.0版本：架构"></p>
 <p>github的下载地址：itc-weixin 项目 github 的 pull 地址: <a href="https://github.com/airman33/itc-weixin.git" target="_blank" rel="external">https://github.com/airman33/itc-weixin.git</a></p>
 
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="ciosqnpbq0000lwnad61nybhr" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
+        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="ciosqo4vv0000s8nai3q0zdm7" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
       
 
       
