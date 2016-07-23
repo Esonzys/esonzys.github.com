@@ -4,17 +4,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Esonzys&#39;s blog</title>
+  <title>微信消息加解密解析 | Esonzys&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="No gain no pain">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Esonzys's blog">
-<meta property="og:url" content="http://esonzys.github.io/index.html">
+  <meta name="description" content="JFinal weixin提供了微信消息加解密的实现方式，这里对实现的过程进行简单的解析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信消息加解密解析">
+<meta property="og:url" content="http://esonzys.github.io/2016/07/23/weixin-msg-encrypt-decrypt/index.html">
 <meta property="og:site_name" content="Esonzys's blog">
-<meta property="og:description" content="No gain no pain">
+<meta property="og:description" content="JFinal weixin提供了微信消息加解密的实现方式，这里对实现的过程进行简单的解析。">
+<meta property="og:updated_time" content="2016-07-23T13:10:47.957Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Esonzys's blog">
-<meta name="twitter:description" content="No gain no pain">
+<meta name="twitter:title" content="微信消息加解密解析">
+<meta name="twitter:description" content="JFinal weixin提供了微信消息加解密的实现方式，这里对实现的过程进行简单的解析。">
   
     <link rel="alternative" href="/atom.xml" title="Esonzys&#39;s blog" type="application/atom+xml">
   
@@ -71,9 +72,7 @@
   </div>
 </header>
     <div class="outer">
-      <section id="main">
-  
-    <article id="post-weixin-msg-encrypt-decrypt" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-weixin-msg-encrypt-decrypt" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/07/23/weixin-msg-encrypt-decrypt/" class="article-date">
   <time datetime="2016-07-23T12:59:25.000Z" itemprop="datePublished">2016-07-23</time>
@@ -90,8 +89,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/23/weixin-msg-encrypt-decrypt/">微信消息加解密解析</a>
+    <h1 class="article-title" itemprop="name">
+      微信消息加解密解析
     </h1>
   
 
@@ -102,11 +101,25 @@
         <blockquote>
 <p>JFinal weixin提供了微信消息加解密的实现方式，这里对实现的过程进行简单的解析。</p>
 </blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2016/07/23/weixin-msg-encrypt-decrypt/#more">Read More</a>
-          </p>
-        
+<a id="more"></a>
+<h4 id="企业号回调模式的消息格式说明"><a href="#企业号回调模式的消息格式说明" class="headerlink" title="企业号回调模式的消息格式说明"></a>企业号回调模式的消息格式说明</h4><p>企业号在回调企业URL时，会对消息体本身做AES加密，以XML格式POST到企业应用的URL上；企业在被动响应时，也需要对数据加密，以XML格式返回给微信。<br>微信服务器在五秒内收不到响应会断掉连接，并且重新发起请求，总共重试三次。如果在调试中，发现成员无法收到响应的消息，可以检查是否消息处理超时。</p>
+<p>当接收成功后，http头部返回200表示接收ok，其他错误码一律当做失败并发起重试</p>
+<p>关于重试的消息排重，有msgid的消息推荐使用msgid排重。事件类型消息推荐使用FromUserName + CreateTime排重。</p>
+<p>假如企业无法保证在五秒内处理并回复，可以直接回复空串，企业号不会对此作任何处理，并且不会发起重试。这种情况下，可以使用发消息接口进行异步回复。</p>
+<p>假设企业回调URL为<a href="http://api.3dept.com。" target="_blank" rel="external">http://api.3dept.com。</a></p>
+<ul>
+<li><p>请求说明：<br><a href="http://api.3dept.com/?msg_signature=ASDFQWEXZCVAQFASDFASDFSS&amp;timestamp=13500001234&amp;nonce=123412323" target="_blank" rel="external">http://api.3dept.com/?msg_signature=ASDFQWEXZCVAQFASDFASDFSS&amp;timestamp=13500001234&amp;nonce=123412323</a></p>
+</li>
+<li><p>回调数据格式：<br>1.msg_encrypt为经过加密的密文<br>2.AgentID为接收的应用id，可在应用的设置页面获取<br>3.ToUserName为企业号的CorpID</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;xml&gt; </span><br><span class="line">   &lt;ToUserName&gt;&lt;[CDATA[toUser]]&lt;/ToUserName&gt;</span><br><span class="line">   &lt;AgentID&gt;&lt;[CDATA[toAgentID]]&lt;/AgentID&gt;</span><br><span class="line">   &lt;Encrypt&gt;&lt;[CDATA[msg_encrypt]]&lt;/Encrypt&gt;</span><br><span class="line">&lt;/xml&gt;</span><br></pre></td></tr></table></figure>
+<p>企业需要对msg_signature进行校验，并解密msg_encrypt，得出msg的原文。</p>
+<ul>
+<li>被动响应给微信的数据格式：<br>1.msg_encrypt为经过加密的密文，算法参见附录<br>2.MsgSignature为签名，算法参见附录<br>3.TimeStamp为时间戳，Nonce为随机数，由企业自行生成</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xml</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">Encrypt</span>&gt;</span><span class="tag">&lt;<span class="name">[CDATA[msg_encrypt]]</span>&gt;</span><span class="tag">&lt;/<span class="name">Encrypt</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">MsgSignature</span>&gt;</span><span class="tag">&lt;<span class="name">[CDATA[msg_signature]]</span>&gt;</span><span class="tag">&lt;/<span class="name">MsgSignature</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">TimeStamp</span>&gt;</span>timestamp<span class="tag">&lt;/<span class="name">TimeStamp</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">Nonce</span>&gt;</span><span class="tag">&lt;<span class="name">[CDATA[nonce]]</span>&gt;</span><span class="tag">&lt;/<span class="name">Nonce</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xml</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
       
     </div>
     <footer class="article-footer">
@@ -122,122 +135,20 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-adjust-jfinal-weixin-framwork" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/23/adjust-jfinal-weixin-framwork/" class="article-date">
-  <time datetime="2016-04-23T09:00:29.000Z" itemprop="datePublished">2016-04-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/jfinal/">jfinal</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/23/adjust-jfinal-weixin-framwork/">调整jfinal weixin架构的记录</a>
-    </h1>
+    <a href="/2016/04/23/adjust-jfinal-weixin-framwork/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">调整jfinal weixin架构的记录</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>JFinal weixin 是一个微信公众平台极速SDK，基于 JFinal weixin 开发不仅可以立即拥有简单易用的API，而且将立即拥有JFinal所有的极速化支持，让开发更加轻松自如。针对jfinal weixin未考虑到将点击菜单输出的回复（例如 1、top10 2、top20）的作为二级菜单进行处理，基于二级菜单的模式进行一次较粗的更改。为了降低使用该框架的开发的门槛、去除以xml形式的菜单配置带来的频繁IO读取导致的性能瓶颈，进行框架升级工作输出itc-weixin 1.0版本。</p>
-</blockquote>
-        
-          <p class="article-more-link">
-            <a href="/2016/04/23/adjust-jfinal-weixin-framwork/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://esonzys.github.io/2016/04/23/adjust-jfinal-weixin-framwork/" data-id="ciqz71yt60000ogna4dyihubd" class="article-share-link" data-share="baidu" data-title="调整jfinal weixin架构的记录">Share</a>
-      
-
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jfinal/">jfinal</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
 
-
-  
-    <article id="post-svn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/03/12/svn/" class="article-date">
-  <time datetime="2016-03-12T15:53:22.000Z" itemprop="datePublished">2016-03-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/配置/">配置</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/12/svn/">redhat 6.5 安装配置svn服务器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>最近工作需要，需一个代码的共享平台；遂在现有的redhat6.5 系统上进行搭建。</p>
-</blockquote>
-<p>一般情况，可以直接从安装盘中安装系统自带的安装包；或者下载<a href="http://subversion.apache.org/">svn</a>对应系统版本进行安装。这里我采用了直接从安装镜像ISO盘里进行安装。</p>
-<ul>
-<li><strong>1</strong> 挂载cdrom中的安装盘<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount -t iso9660 /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-        
-          <p class="article-more-link">
-            <a href="/2016/03/12/svn/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      
-        <a data-url="http://esonzys.github.io/2016/03/12/svn/" data-id="ciqz71ytk0004ognaao9c0fcq" class="article-share-link" data-share="baidu" data-title="redhat 6.5 安装配置svn服务器">Share</a>
-      
-
-      
-
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redhat/">redhat</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/svn/">svn</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-  
 </section>
       
       <aside id="sidebar">
