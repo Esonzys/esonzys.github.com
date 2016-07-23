@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://esonzys.github.io/2016/07/23/weixin-msg-encrypt-decrypt/index.html">
 <meta property="og:site_name" content="Esonzys's blog">
 <meta property="og:description" content="JFinal weixin提供了微信消息加解密的实现方式，这里对实现的过程进行简单的解析。">
-<meta property="og:updated_time" content="2016-07-23T13:22:47.228Z">
+<meta property="og:updated_time" content="2016-07-23T13:24:05.673Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信消息加解密解析">
 <meta name="twitter:description" content="JFinal weixin提供了微信消息加解密的实现方式，这里对实现的过程进行简单的解析。">
@@ -110,13 +110,13 @@
 <ul>
 <li><p>请求说明：<br><a href="http://api.3dept.com/?msg_signature=ASDFQWEXZCVAQFASDFASDFSS&amp;timestamp=13500001234&amp;nonce=123412323" target="_blank" rel="external">http://api.3dept.com/?msg_signature=ASDFQWEXZCVAQFASDFASDFSS&amp;timestamp=13500001234&amp;nonce=123412323</a></p>
 </li>
-<li><p>回调数据格式：<br>1.<em>msg_encrypt</em>为经过加密的密文<br>2.<em>AgentID</em>为接收的应用id，可在应用的设置页面获取<br>3.<em>ToUserName</em>为企业号的<em>CorpID</em></p>
+<li><p>回调数据格式：<br>1.msg_encrypt为经过加密的密文<br>2.AgentID为接收的应用id，可在应用的设置页面获取<br>3.ToUserName为企业号的CorpID</p>
 </li>
 </ul>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;xml&gt; </span><br><span class="line">   &lt;ToUserName&gt;&lt;[CDATA[toUser]]&lt;/ToUserName&gt;</span><br><span class="line">   &lt;AgentID&gt;&lt;[CDATA[toAgentID]]&lt;/AgentID&gt;</span><br><span class="line">   &lt;Encrypt&gt;&lt;[CDATA[msg_encrypt]]&lt;/Encrypt&gt;</span><br><span class="line">&lt;/xml&gt;</span><br></pre></td></tr></table></figure>
-<p>企业需要对<em>msg_signature</em>进行校验，并解密<em>msg_encrypt</em>，得出<em>msg</em>的原文。</p>
+<p>企业需要对msg_signature进行校验，并解密msg_encrypt，得出msg的原文。</p>
 <ul>
-<li>被动响应给微信的数据格式：<br>1.<em>msg_encrypt</em>为经过加密的密文，算法参见附录<br>2.<em>MsgSignature</em>为签名，算法参见附录<br>3.<em>TimeStamp</em>为时间戳，<em>Nonce</em>为随机数，由企业自行生成</li>
+<li>被动响应给微信的数据格式：<br>1.msg_encrypt为经过加密的密文，算法参见附录<br>2.MsgSignature为签名，算法参见附录<br>3.TimeStamp为时间戳，Nonce为随机数，由企业自行生成</li>
 </ul>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xml</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">Encrypt</span>&gt;</span><span class="tag">&lt;<span class="name">[CDATA[msg_encrypt]]</span>&gt;</span><span class="tag">&lt;/<span class="name">Encrypt</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">MsgSignature</span>&gt;</span><span class="tag">&lt;<span class="name">[CDATA[msg_signature]]</span>&gt;</span><span class="tag">&lt;/<span class="name">MsgSignature</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">TimeStamp</span>&gt;</span>timestamp<span class="tag">&lt;/<span class="name">TimeStamp</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">Nonce</span>&gt;</span><span class="tag">&lt;<span class="name">[CDATA[nonce]]</span>&gt;</span><span class="tag">&lt;/<span class="name">Nonce</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xml</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <h4 id="jfinal-weixin的解密的代码实现（存在代码冗余）及改进方案"><a href="#jfinal-weixin的解密的代码实现（存在代码冗余）及改进方案" class="headerlink" title="jfinal-weixin的解密的代码实现（存在代码冗余）及改进方案"></a>jfinal-weixin的解密的代码实现（存在代码冗余）及改进方案</h4><p>1、从request请求中读取消息</p>
@@ -152,7 +152,7 @@
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/07/23/weixin-msg-encrypt-decrypt/" data-id="ciqz7hc2t000160napf6r6tbn" class="article-share-link" data-share="baidu" data-title="微信消息加解密解析">Share</a>
+        <a data-url="http://esonzys.github.io/2016/07/23/weixin-msg-encrypt-decrypt/" data-id="ciqz7j1f500010kna278e6wig" class="article-share-link" data-share="baidu" data-title="微信消息加解密解析">分享到</a>
       
 
       
@@ -168,7 +168,7 @@
   
   
     <a href="/2016/04/23/adjust-jfinal-weixin-framwork/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">调整jfinal weixin架构的记录</div>
     </a>
   
@@ -183,7 +183,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/jfinal/">jfinal</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/配置/">配置</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -192,7 +192,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">标签</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/jfinal/">jfinal</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redhat/">redhat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weixin/">weixin</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -201,7 +201,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
       <a href="/tags/jfinal/" style="font-size: 20px;">jfinal</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/redhat/" style="font-size: 10px;">redhat</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a> <a href="/tags/weixin/" style="font-size: 10px;">weixin</a>
     </div>
@@ -210,7 +210,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -219,7 +219,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">近期文章</h3>
     <div class="widget">
       <ul>
         
@@ -242,7 +242,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Links</h3>
+    <h3 class="widget-title">友情链接</h3>
     <div class="widget">
       <ul>
         
@@ -279,7 +279,7 @@
 </nav>
   <!-- totop start -->
 <div id="totop">
-<a title="totop"><img src="/img/scrollup.png"/></a>
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 </div>
 
 <!-- totop end -->
