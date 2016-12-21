@@ -4,18 +4,26 @@
 <head>
   <meta charset="utf-8">
   
-  <title>code-coverage | Esonzys&#39;s blog</title>
+  <title>code-coverage - 单元测试代码覆盖率 | Esonzys&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="No gain no pain">
+  <meta name="description" content="代码覆盖测试
+在做单元测试时，代码覆盖率常常被拿来作为衡量测试好坏的指标，甚至，用代码覆盖率来考核测试任务完成情况，比如，代码覆盖率必须达到80％或90％。于是乎，测试人员费尽心思设计案例覆盖代码。用代码覆盖率来衡量，有利也有有弊。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="code-coverage">
+<meta property="og:title" content="code-coverage - 单元测试代码覆盖率">
 <meta property="og:url" content="http://esonzys.github.io/2016/12/21/code-coverage/index.html">
 <meta property="og:site_name" content="Esonzys's blog">
-<meta property="og:description" content="No gain no pain">
-<meta property="og:updated_time" content="2016-12-21T14:54:27.918Z">
+<meta property="og:description" content="代码覆盖测试
+在做单元测试时，代码覆盖率常常被拿来作为衡量测试好坏的指标，甚至，用代码覆盖率来考核测试任务完成情况，比如，代码覆盖率必须达到80％或90％。于是乎，测试人员费尽心思设计案例覆盖代码。用代码覆盖率来衡量，有利也有有弊。">
+<meta property="og:image" content="http://i1.piimg.com/581862/a2ad733c7d13a18a.jpg">
+<meta property="og:image" content="http://i1.piimg.com/581862/a602307399ab7666.jpg">
+<meta property="og:image" content="http://i1.piimg.com/581862/1eb884b2e76d2406.jpg">
+<meta property="og:image" content="http://i1.piimg.com/581862/6778b4a19070f658.jpg">
+<meta property="og:updated_time" content="2016-12-21T15:01:49.433Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="code-coverage">
-<meta name="twitter:description" content="No gain no pain">
+<meta name="twitter:title" content="code-coverage - 单元测试代码覆盖率">
+<meta name="twitter:description" content="代码覆盖测试
+在做单元测试时，代码覆盖率常常被拿来作为衡量测试好坏的指标，甚至，用代码覆盖率来考核测试任务完成情况，比如，代码覆盖率必须达到80％或90％。于是乎，测试人员费尽心思设计案例覆盖代码。用代码覆盖率来衡量，有利也有有弊。">
+<meta name="twitter:image" content="http://i1.piimg.com/581862/a2ad733c7d13a18a.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Esonzys&#39;s blog" type="application/atom+xml">
   
@@ -86,7 +94,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      code-coverage
+      code-coverage - 单元测试代码覆盖率
     </h1>
   
 
@@ -94,12 +102,53 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h2 id="代码覆盖测试"><a href="#代码覆盖测试" class="headerlink" title="代码覆盖测试"></a>代码覆盖测试</h2><blockquote>
+<p>在做单元测试时，代码覆盖率常常被拿来作为衡量测试好坏的指标，甚至，用代码覆盖率来考核测试任务完成情况，比如，代码覆盖率必须达到80％或90％。于是乎，测试人员费尽心思设计案例覆盖代码。用代码覆盖率来衡量，有利也有有弊。  </p>
+</blockquote>
+<a id="more"></a>
+<h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h3><p>代码覆盖率 ＝ 代码的覆盖程度，一种度量方式。  </p>
+<ul>
+<li><p>1)<strong>语句覆盖(StatementCoverage)：</strong> 又称行覆盖(LineCoverage)，段覆盖(SegmentCoverage)，基本块覆盖(BasicBlockCoverage)，这是最常用也是最常见的一种覆盖方式，<strong>就是度量被测代码中每个可执行语句是否被执行到了</strong>。  </p>
+</li>
+<li><p>2)<strong>判定覆盖(DecisionCoverage)：</strong> 又称分支覆盖(BranchCoverage)，所有边界覆盖(All-EdgesCoverage)，基本路径覆盖(BasicPathCoverage)，判定路径覆盖(Decision-Decision-Path)。它度量 <strong>程序中每一个判定的分支是否都被测试到了</strong>。  </p>
+</li>
+<li><p>3)<strong>条件覆盖(ConditionCoverage)：</strong> 度量判定中的每个子表达式结果true和false是否被测试到了。</p>
+<p>  为了说明判定与条件覆盖的区别，假设被测试代码如下：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (a &lt; <span class="number">10</span> || b &lt; <span class="number">10</span>) <span class="comment">// 判定</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 分支一</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 分支二</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>判定覆盖只需要考虑判断结果为true和false，设计案例如下:
+</code></pre> <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">   TestCase1：a=<span class="number">5</span>，b=任意值  <span class="comment">//覆盖了分支一</span></span><br><span class="line">   TestCase1：a=<span class="number">15</span>，b=<span class="number">15</span>     <span class="comment">//覆盖了分支二</span></span><br><span class="line">```    </span><br><span class="line">   条件覆盖只需要考虑每个条件表达式是否被覆盖到，设计案例如下：  </span><br><span class="line"></span><br><span class="line">``` java</span><br><span class="line">   TestCase1：a=<span class="number">5</span>，b=<span class="number">5</span>  <span class="comment">//a &lt; 10 = true || b &lt; 10 = true</span></span><br><span class="line">   TestCase1：a=<span class="number">15</span>，b=<span class="number">15</span>     <span class="comment">//a &lt; 10 = false || b &lt; 10 = false</span></span><br></pre></td></tr></table></figure>
+<pre><code>&gt;注：条件覆盖不是将判定中的每个条件表达式的结果进行排列组合，而是只要每个条件表达式的结果true和false测试到。
+</code></pre><ul>
+<li>4)路径覆盖(PathCoverage)：又称断言覆盖(PredicateCoverage)。<strong>度量是否函数的每一个分支都被执行了</strong>。  </li>
+</ul>
+<h3 id="2-代码覆盖测试工具"><a href="#2-代码覆盖测试工具" class="headerlink" title="2. 代码覆盖测试工具"></a>2. 代码覆盖测试工具</h3><h4 id="2-1-使用-EclEmma-统计单元测试覆盖率"><a href="#2-1-使用-EclEmma-统计单元测试覆盖率" class="headerlink" title="2.1 使用 EclEmma 统计单元测试覆盖率"></a>2.1 使用 EclEmma 统计单元测试覆盖率</h4><ul>
+<li><p>1)安装EclEmma插件，可以在eclipse的market中进行搜索安装。<br><img src="http://i1.piimg.com/581862/a2ad733c7d13a18a.jpg" alt="安装EclEmma插件">  </p>
+</li>
+<li><p>2)使用EclEmma测试java程序<br>鼠标放置在项目上，右键点击找到 Coverage As 选项，选择Junit Test；<br><img src="http://i1.piimg.com/581862/a602307399ab7666.jpg" alt="右键点击"><br>执行完成后，可以查看覆盖率和测试结果<br><img src="http://i1.piimg.com/581862/1eb884b2e76d2406.jpg" alt="查看覆盖测试结果"></p>
+</li>
+</ul>
+<blockquote>
+<p>备注：可以参考<a href="http://www.ibm.com/developerworks/cn/java/j-lo-eclemma/" target="_blank" rel="external">使用 EclEmma 进行覆盖测试</a>该片文件了解其他的一些使用方法。<br>EclEmma的官方使用手册：<a href="http://www.eclemma.org/index.html" target="_blank" rel="external">EclEmma–Java Code Coverage for Eclipse</a></p>
+</blockquote>
+<h3 id="2-2-使用-cobertura-统计单元测试覆盖率"><a href="#2-2-使用-cobertura-统计单元测试覆盖率" class="headerlink" title="2.2 使用 cobertura 统计单元测试覆盖率"></a>2.2 使用 cobertura 统计单元测试覆盖率</h3><p>cobertura可以很好的结合maven项目，生成html的统计页面。</p>
+<ul>
+<li><p>1)在maven的pom.xml文件中添加cobertura-maven-plugin插件：</p>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 构建项目站点报告插件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-site-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">		<span class="tag">&lt;<span class="name">locales</span>&gt;</span>zh_CN<span class="tag">&lt;/<span class="name">locales</span>&gt;</span> <span class="comment">&lt;!-- 配置站点国际化 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">outputEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">outputEncoding</span>&gt;</span><span class="comment">&lt;!-- 输出编码 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 测试覆盖率的报告 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.codehaus.mojo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>cobertura-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">formats</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">format</span>&gt;</span>html<span class="tag">&lt;/<span class="name">format</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">format</span>&gt;</span>xml<span class="tag">&lt;/<span class="name">format</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">formats</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">id</span>&gt;</span>cobertura-report<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">goal</span>&gt;</span>cobertura<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">phase</span>&gt;</span>test<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>  使用maven-site-plugin插件，生成的测试覆盖率报告文档会放在 <strong>target/site</strong> 目录下。</p>
+</li>
+<li>2)运行进行覆盖率统计<br>  运行mvn coberura:coberura<br>  运行成功后查看{project_dir}\target\site\coberura\index.html。<br>  <img src="http://i1.piimg.com/581862/6778b4a19070f658.jpg" alt=""></li>
+</ul>
+<blockquote>
+<p>备注：cobertura-maven-plugin的相关参数的配置可参考(Cobertura Plugin)[<a href="http://maven-plugins.sourceforge.net/maven-cobertura-plugin/index.html]。" target="_blank" rel="external">http://maven-plugins.sourceforge.net/maven-cobertura-plugin/index.html]。</a></p>
+</blockquote>
+
       
     </div>
     <footer class="article-footer">
       
-        <a data-url="http://esonzys.github.io/2016/12/21/code-coverage/" data-id="ciwz2ayyj00005wna87o0aesx" class="article-share-link" data-share="baidu" data-title="code-coverage">Share</a>
+        <a data-url="http://esonzys.github.io/2016/12/21/code-coverage/" data-id="ciwz2jxsa0000nsna7c8i1lx2" class="article-share-link" data-share="baidu" data-title="code-coverage - 单元测试代码覆盖率">分享到</a>
       
 
       
@@ -115,7 +164,7 @@
   
   
     <a href="/2016/07/23/html5-upload-images/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">html5-upload-images</div>
     </a>
   
@@ -130,7 +179,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/jfinal/">jfinal</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/配置/">配置</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -139,7 +188,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
+    <h3 class="widget-title">标签</h3>
     <div class="widget">
       <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/EclEmma/">EclEmma</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cobertura/">cobertura</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jfinal/">jfinal</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redhat/">redhat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/svn/">svn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/weixin/">weixin</a><span class="tag-list-count">1</span></li></ul>
     </div>
@@ -148,7 +197,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
+    <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
       <a href="/tags/EclEmma/" style="font-size: 10px;">EclEmma</a> <a href="/tags/cobertura/" style="font-size: 10px;">cobertura</a> <a href="/tags/jfinal/" style="font-size: 20px;">jfinal</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/redhat/" style="font-size: 10px;">redhat</a> <a href="/tags/svn/" style="font-size: 10px;">svn</a> <a href="/tags/weixin/" style="font-size: 10px;">weixin</a>
     </div>
@@ -157,7 +206,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -166,12 +215,12 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">近期文章</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2016/12/21/code-coverage/">code-coverage</a>
+            <a href="/2016/12/21/code-coverage/">code-coverage - 单元测试代码覆盖率</a>
           </li>
         
           <li>
@@ -197,7 +246,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Links</h3>
+    <h3 class="widget-title">友情链接</h3>
     <div class="widget">
       <ul>
         
@@ -234,7 +283,7 @@
 </nav>
   <!-- totop start -->
 <div id="totop">
-<a title="totop"><img src="/img/scrollup.png"/></a>
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 </div>
 
 <!-- totop end -->
